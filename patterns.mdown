@@ -6,17 +6,43 @@
 
 
 
+## Common Web Application
+<< insert tier block diagram >>
+
+
+
 ## Patterns
-- Front Controller
-- MVC
-- Service
 - DAO
-- Bean
+- Service
+- MVC
+- Front Controller
+- JavaBean
 - Dependency Injection (in contrast to Service Locator pattern)
 - Singleton
 - Factory
-- Proxy
+- Dynamic Proxy
 - Strategy vs. Template Method
+
+
+
+## DAO
+- Encapsulates the data access logic
+- Often one DAO represents one table in a well engineered DB schema, or one logical domain/grouping (e.g. CustomerDao) in a misaligned DB schema
+- Default transaction boundaries are the methods in the DAO
+- Implement as a pair of interface and implementation classes
+
+
+
+## Service
+- Acts as a the API to the middle tier
+- Aggregates business logic and DAOs
+- Shoot for one service call per URL
+- Often the logical place for transaction boundaries
+- Implement as a pair of interface and implementation classes
+
+
+
+## MVC
 
 
 
@@ -27,26 +53,20 @@
 
 
 
-## MVC
+## JavaBean
+- Public no-arg constructor, serializable, getters/setters
+- Intended to hold and transport data
+- No business logic
 
-
-
-## Service
-- One service call per URL
-
-
-
-## DAO
-
-
-
-## Bean
+Notes:
+Getters and setters are typically boilerplate code. Other JVM languages like Groovy will expose them by default,
+reducing the code noise. Project Lombak has annotations to expose getters and setters.
 
 
 
 ## Dependency Injection
-- separates the sender from the receiver so that the sender is not coupled to the receiver's implementation
-- allows for mocks, dynamic proxies, multiple implementations
+- Separates the sender from the receiver so that the sender is not coupled to the receiver's implementation
+- Allows for mocks, dynamic proxies, multiple implementations
 - Injection points are defined at instance variables or setters
 - Run-time injection strategies vary by framework (type, variable name, id, or custom construction)
 
@@ -61,12 +81,12 @@ DI is not a cure-all. It is perfectly possible to write tightly coupled code and
 
 
 ## Service Locator
-- every service consumer depends on the locator
-- hides true dependencies within the code
-- testing with mocks/stubs is easy with either, if the locator is written well
-- locators get complicated when components are shared/reused
-- dependencies are created as needed
-- useful when blending frameworks that want to instantiate objects (ex. spring + quartz)
+- Every service consumer depends on the locator
+- Hides true dependencies within the code
+- Testing with mocks/stubs is easy with either, if the locator is written well
+- Locators get complicated when components are shared/reused
+- Dependencies are created as needed
+- Useful when blending frameworks that want to instantiate objects (ex. spring + quartz)
 
 Notes:
 The spring + quartz example would be using Spring's DI as a service locator.
@@ -74,27 +94,45 @@ The spring + quartz example would be using Spring's DI as a service locator.
 
 
 ## Singleton
+- The white bread toast of patterns: plain, yet awesome
+- Serves to reuse object instances to save from repeated instantiation costs
+- Spring DI beans are singletons by default
 
 
 
 ## Factory
+- Object for creating other objects
+- Beyond naive dependency constructor, factories provide instances of dependent objects
+- Spring DI runs internally on factories, to replace traditional custom code that would have provided dependent objects
+- When possible, reuse the objects instantiated by the factory with the `Singleton` pattern
 
 
 
-## Proxy
+## Dynamic Proxy
+- Functions as an interface to a object, created dynamically through reflection
+- Does not require compilation of custom code/aspects
+- Spring DI creates dynamic proxies to many of the beans in its application context
+- `@Secured`, `@Transactional`, `@Cached` are examples of annotations that instruct Spring to create proxies that add behavior to the objects
+- Spring AOP uses JDK dynamic proxies (or CGLIB) to create advised objects via runtime weaving, rather than compile-time or load-time weaving
 
 
 
 ## Strategy vs. Template Method
-- both defer part of the implementation to another class
+- Both defer part of the implementation to another class
 - Template Method uses compile-time deferring: you subclass and implement its abstract method (e.g. Struts 1.x Action class)
 - Strategy defers the implementations at runtime, e.g. 
 ```
-Document.print(PrintStrategy ps) { ps.print(this) } 
+class Document {
+	print(PrintStrategy ps) {
+		ps.print(this)
+	}
+}
 ```
 vs 
 ```
-Document { public abstract void print() }
+class Document {
+	abstract void print()
+}
 ```
 
 Notes:
