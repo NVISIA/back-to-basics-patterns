@@ -1,0 +1,101 @@
+# Back to Basics Series
+## Best Practice Patterns in Web Applications
+---
+## Courtney Faulkner
+### July 23, 2014
+
+
+
+## Patterns
+- Front Controller
+- MVC
+- Service
+- DAO
+- Bean
+- Dependency Injection (in contrast to Service Locator pattern)
+- Singleton
+- Factory
+- Proxy
+- Strategy vs. Template Method
+
+
+
+## Front Controller
+- Serves as the entry point for request handling, providing a single location for common request logic
+- e.g. the Spring Web MVC `DispatcherServlet` 
+![mvc](img/mvc.png "Spring Web MVC")
+
+
+
+## MVC
+
+
+
+## Service
+- One service call per URL
+
+
+
+## DAO
+
+
+
+## Bean
+
+
+
+## Dependency Injection
+- separates the sender from the receiver so that the sender is not coupled to the receiver's implementation
+- allows for mocks, dynamic proxies, multiple implementations
+- Injection points are defined at instance variables or setters
+- Run-time injection strategies vary by framework (type, variable name, id, or custom construction)
+
+Notes:
+Spring is the most common DI framework we use.
+
+With loose coupling, you lose code clarity.. what implements this DAO?  Where is the transaction coming from?
+You are deferring more of the system's behavior to runtime instead of compile time (i.e. you don't know what it will do by just looking at the code)
+To get the full advantages of DI, classes should have small interfaces and not do too much. If you have a WonderClass that does everything, then replacing its implementation with an alternate one is more problematic; you don't have fine grained control over the runtime behavior of your system.
+
+DI is not a cure-all. It is perfectly possible to write tightly coupled code and use DI, e.g. if FooJpaDao writes a flag and BarJpaDao reads the flag, they are tightly coupled and any code in Foo and Bar not concerned with that flag becomes tightly coupled. That flag _should_ only be known about by either FooJpaDao or BarJpaDoa.
+
+
+## Service Locator
+- every service consumer depends on the locator
+- hides true dependencies within the code
+- testing with mocks/stubs is easy with either, if the locator is written well
+- locators get complicated when components are shared/reused
+- dependencies are created as needed
+- useful when blending frameworks that want to instantiate objects (ex. spring + quartz)
+
+Notes:
+The spring + quartz example would be using Spring's DI as a service locator.
+
+
+
+## Singleton
+
+
+
+## Factory
+
+
+
+## Proxy
+
+
+
+## Strategy vs. Template Method
+- both defer part of the implementation to another class
+- Template Method uses compile-time deferring: you subclass and implement its abstract method (e.g. Struts 1.x Action class)
+- Strategy defers the implementations at runtime, e.g. 
+```
+Document.print(PrintStrategy ps) { ps.print(this) } 
+```
+vs 
+```
+Document { public abstract void print() }
+```
+
+Notes:
+Tradeoffs between runtime vs compile-time: runtime behavior is mostly knowable at runtime, whereas code can be inspected to more easily determine compile-time behavior.
