@@ -7,7 +7,7 @@
 
 
 ## Common Web Application
-<< insert tier block diagram >>
+![tiers](img/tiers.png "Web App Tiers")
 
 
 
@@ -23,12 +23,16 @@
 - Dynamic Proxy
 - Strategy vs. Template Method
 
+Notes: some of this is a refresher on the patterns we see every day and may not consider often, and some is
+suggestions on using the patterns well. Patterns represent reusable design, and are important to know in order
+to communicate design more efficiently.
+
 
 
 ## DAO
 - Encapsulates the data access logic
 - Often one DAO represents one table in a well engineered DB schema, or one logical domain/grouping (e.g. CustomerDao) in a misaligned DB schema
-- Default transaction boundaries are the methods in the DAO
+- Default transaction boundaries are the methods in the DAO when using Spring + Hibernate/JPA
 - Implement as a pair of interface and implementation classes
 
 
@@ -43,12 +47,17 @@
 
 
 ## MVC
-
+- Separates the presentation layer concerns into models, views, and controllers
+- Should contain only presentation logic
+- Minimize calls to services/consolidate services
+- No calls to DAOs
+- Becomes MV* in SPAs
 
 
 ## Front Controller
 - Serves as the entry point for request handling, providing a single location for common request logic
-- e.g. the Spring Web MVC `DispatcherServlet` 
+- Not usually something custom built
+- e.g. the Spring Web MVC `DispatcherServlet`
 ![mvc](img/mvc.png "Spring Web MVC")
 
 
@@ -57,6 +66,7 @@
 - Public no-arg constructor, serializable, getters/setters
 - Intended to hold and transport data
 - No business logic
+- Should implement equals, hashcode, and toString
 
 Notes:
 Getters and setters are typically boilerplate code. Other JVM languages like Groovy will expose them by default,
@@ -97,6 +107,7 @@ The spring + quartz example would be using Spring's DI as a service locator.
 - The white bread toast of patterns: plain, yet awesome
 - Serves to reuse object instances to save from repeated instantiation costs
 - Spring DI beans are singletons by default
+- Be mindful of the state in singleton objects
 
 
 
@@ -120,7 +131,7 @@ The spring + quartz example would be using Spring's DI as a service locator.
 ## Strategy vs. Template Method
 - Both defer part of the implementation to another class
 - Template Method uses compile-time deferring: you subclass and implement its abstract method (e.g. Struts 1.x Action class)
-- Strategy defers the implementations at runtime, e.g. 
+- Strategy defers the implementations at runtime, e.g.
 ```
 class Document {
 	print(PrintStrategy ps) {
@@ -128,7 +139,7 @@ class Document {
 	}
 }
 ```
-vs 
+vs
 ```
 class Document {
 	abstract void print()
@@ -137,3 +148,21 @@ class Document {
 
 Notes:
 Tradeoffs between runtime vs compile-time: runtime behavior is mostly knowable at runtime, whereas code can be inspected to more easily determine compile-time behavior.
+
+
+
+## Miscellaneous
+- Don't log and rethrow exceptions (leads to horrible logs)
+- Don't use checked exceptions if an operation is unrecoverable
+- Don't throw exceptions that expose your underlying implementation (SQLException, IOException)
+- Try to make APIs agnostic about implementations ("How would my API change if I used a web service instead of JPA?")
+
+
+## Miscellaneous
+- Shield as much code from the UI as you can (convert parameters from Strings to their actual types early)
+- Minimize one-off utility methods/classes, and don't reinvent the wheel
+- No javax.servlet in the service layer or beyond
+- Use inheritance sparingly
+- Avoid blindly applying OO patterns to a function language (e.g. command pattern in Javascript)
+
+Notes: command patterns are simulated closures, so simulating it in a language like Javascript that support closures is silly
