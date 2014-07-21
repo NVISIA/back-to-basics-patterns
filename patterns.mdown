@@ -165,6 +165,6 @@ Tradeoffs between runtime vs compile-time: runtime behavior is mostly knowable a
 - No javax.servlet in the service layer or beyond
 - Use inheritance sparingly
 - Avoid blindly applying OO patterns to a function language (e.g. command pattern in Javascript)
-- Look for code smell, and anti-patterns (lots of books, sites on this)
+- Look for [code smells](http://blog.codinghorror.com/code-smells/), and [anti-patterns](http://javaantipatterns.wordpress.com/) (lots of books, sites on this)
 
 Notes: command patterns are simulated closures, so simulating it in a language like Javascript that support closures is silly
