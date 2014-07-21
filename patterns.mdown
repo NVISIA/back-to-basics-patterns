@@ -20,7 +20,7 @@
 - Dependency Injection (in contrast to Service Locator pattern)
 - Singleton
 - Factory
-- Dynamic Proxy
+- Proxy
 - Strategy vs. Template Method
 
 Notes: some of this is a refresher on the patterns we see every day and may not consider often, and some is
@@ -119,8 +119,8 @@ The spring + quartz example would be using Spring's DI as a service locator.
 
 
 
-## Dynamic Proxy
-- Functions as an interface to a object, created dynamically through reflection
+## Proxy
+- Functions as an interface to a object (JDK Dynamic Proxy API creates dynamic proxies through reflection)
 - Does not require compilation of custom code/aspects
 - Spring DI creates dynamic proxies to many of the beans in its application context
 - `@Secured`, `@Transactional`, `@Cached` are examples of annotations that instruct Spring to create proxies that add behavior to the objects
@@ -152,6 +152,7 @@ Tradeoffs between runtime vs compile-time: runtime behavior is mostly knowable a
 
 
 ## Miscellaneous
+- Encapsulate what varies - paraphrased from _Design Patterns: Elements of Reusable Object-Oriented Software_
 - Don't log and rethrow exceptions (leads to horrible logs)
 - Don't use checked exceptions if an operation is unrecoverable
 - Don't throw exceptions that expose your underlying implementation (SQLException, IOException)
@@ -164,5 +165,6 @@ Tradeoffs between runtime vs compile-time: runtime behavior is mostly knowable a
 - No javax.servlet in the service layer or beyond
 - Use inheritance sparingly
 - Avoid blindly applying OO patterns to a function language (e.g. command pattern in Javascript)
+- Look for code smell, and anti-patterns (lots of books, sites on this)
 
 Notes: command patterns are simulated closures, so simulating it in a language like Javascript that support closures is silly
