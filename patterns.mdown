@@ -22,6 +22,7 @@
 - Factory
 - Proxy
 - Strategy vs. Template Method
+- Builder
 
 Notes: some of this is a refresher on the patterns we see every day and may not consider often, and some is
 suggestions on using the patterns well. Patterns represent reusable design, and are important to know in order
@@ -148,6 +149,24 @@ class Document {
 
 Notes:
 Tradeoffs between runtime vs compile-time: runtime behavior is mostly knowable at runtime, whereas code can be inspected to more easily determine compile-time behavior.
+
+
+
+## Builder
+- Simplifies construction of complex objects
+- Avoids the telescoping constructor anti-pattern
+- Example of a builder:
+```
+http
+  .csrf().disable()
+		.authorizeRequests()
+  .antMatchers("/api/**").hasRole("USER")
+  .antMatchers("/beans/**").hasRole("ADMIN")
+		.anyRequest()
+		.authenticated()
+		.and()
+		.httpBasic();
+```
 
 
 
